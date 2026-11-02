@@ -1,0 +1,300 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all access
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidInvestigation(data) {
+      return data.userId is string &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+             data.technologyType is string && data.technologyType.size() <= 100 &&
+             data.vendor is string && data.vendor.size() <= 100 &&
+             data.status in ['INVESTIGATION', 'BUSINESS_CASE', 'PILOT', 'CHANGE_MANAGEMENT', 'ECOSYSTEM_ADOPTION'] &&
+             (!('description' in data) || (data.description is string && data.description.size() <= 5000)) &&
+             (!('capexEstimate' in data) || (data.capexEstimate is number && data.capexEstimate >= 0)) &&
+             (!('opexEstimate' in data) || (data.opexEstimate is number && data.opexEstimate >= 0)) &&
+             (!('projectedRoi' in data) || (data.projectedRoi is number)) &&
+             (!('paybackYears' in data) || (data.paybackYears is number && data.paybackYears >= 0)) &&
+             (!('saidiImprovement' in data) || (data.saidiImprovement is number && data.saidiImprovement >= 0)) &&
+             (!('pilotFeasibilityScore' in data) || (data.pilotFeasibilityScore is number && data.pilotFeasibilityScore >= 0 && data.pilotFeasibilityScore <= 100)) &&
+             (!('maximoIntegrationStatus' in data) || (data.maximoIntegrationStatus is string && data.maximoIntegrationStatus.size() <= 50)) &&
+             (!('azureIntegrationStatus' in data) || (data.azureIntegrationStatus is string && data.azureIntegrationStatus.size() <= 50)) &&
+             (!('oracleIntegrationStatus' in data) || (data.oracleIntegrationStatus is string && data.oracleIntegrationStatus.size() <= 50)) &&
+             (!('snowflakeIntegrationStatus' in data) || (data.snowflakeIntegrationStatus is string && data.snowflakeIntegrationStatus.size() <= 50)) &&
+             (!('copilotReportingStatus' in data) || (data.copilotReportingStatus is string && data.copilotReportingStatus.size() <= 50)) &&
+             (!('pilotFeederSubstation' in data) || (data.pilotFeederSubstation is string && data.pilotFeederSubstation.size() <= 200)) &&
+             (!('pilotDurationWeeks' in data) || (data.pilotDurationWeeks is int && data.pilotDurationWeeks >= 0 && data.pilotDurationWeeks <= 520)) &&
+             (!('pilotSuccessRate' in data) || (data.pilotSuccessRate is number && data.pilotSuccessRate >= 0 && data.pilotSuccessRate <= 100)) &&
+             (!('changeManagementScore' in data) || (data.changeManagementScore is number && data.changeManagementScore >= 0 && data.changeManagementScore <= 100)) &&
+             (!('strategicSummary' in data) || (data.strategicSummary is string && data.strategicSummary.size() <= 10000));
+    }
+
+    function isValidInterview(data) {
+      return data.userId is string &&
+             data.investigationId is string &&
+             data.stakeholderName is string && data.stakeholderName.size() > 0 && data.stakeholderName.size() <= 150 &&
+             data.stakeholderRole is string && data.stakeholderRole.size() > 0 && data.stakeholderRole.size() <= 100 &&
+             (!('department' in data) || (data.department is string && data.department.size() <= 100)) &&
+             (!('notes' in data) || (data.notes is string && data.notes.size() <= 10000)) &&
+             (!('priorityRating' in data) || (data.priorityRating is int && data.priorityRating >= 1 && data.priorityRating <= 5)) &&
+             (!('feasibilityAssessment' in data) || (data.feasibilityAssessment is string && data.feasibilityAssessment.size() <= 2000)) &&
+             (!('gridDomain' in data) || (data.gridDomain in ['GENERATION', 'TRANSMISSION', 'DISTRIBUTION', 'SUBSTATION', 'CUSTOMER_DER', 'CROSS_CUTTING'])) &&
+             (!('sentiment' in data) || (data.sentiment in ['POSITIVE', 'NEUTRAL', 'CAUTIOUS', 'CONCERNED'])) &&
+             (!('keyRequirements' in data) || (data.keyRequirements is string && data.keyRequirements.size() <= 5000)) &&
+             (!('integrationConcerns' in data) || (data.integrationConcerns is string && data.integrationConcerns.size() <= 5000));
+    }
+
+    function isValidUseCase(data) {
+      return data.userId is string &&
+             data.investigationId is string &&
+             data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+             (!('description' in data) || (data.description is string && data.description.size() <= 5000)) &&
+             (!('targetSystems' in data) || (data.targetSystems is string && data.targetSystems.size() <= 500)) &&
+             (!('projectedAnnualSavings' in data) || (data.projectedAnnualSavings is number && data.projectedAnnualSavings >= 0)) &&
+             (!('feasibilityScore' in data) || (data.feasibilityScore is number && data.feasibilityScore >= 0 && data.feasibilityScore <= 100)) &&
+             (!('projectedRoi' in data) || (data.projectedRoi is number)) &&
+             (!('gridDomain' in data) || (data.gridDomain in ['GENERATION', 'TRANSMISSION', 'DISTRIBUTION', 'SUBSTATION', 'CUSTOMER_DER', 'CROSS_CUTTING'])) &&
+             (!('riskLevel' in data) || (data.riskLevel in ['LOW', 'MEDIUM', 'HIGH'])) &&
+             (!('stakeholderBacking' in data) || (data.stakeholderBacking is string && data.stakeholderBacking.size() <= 1000)) &&
+             (!('implementationWeeks' in data) || (data.implementationWeeks is int && data.implementationWeeks >= 0 && data.implementationWeeks <= 520));
+    }
+
+    function isValidPilotKpi(data) {
+      return data.userId is string &&
+             data.investigationId is string &&
+             data.metricName is string && data.metricName.size() > 0 && data.metricName.size() <= 150 &&
+             data.category in ['EFFICIENCY', 'UPTIME', 'RELIABILITY', 'POWER_QUALITY', 'COST_REDUCTION', 'SAFETY_COMPLIANCE'] &&
+             data.currentValue is number &&
+             data.targetValue is number &&
+             data.unit is string && data.unit.size() <= 20 &&
+             (!('notes' in data) || (data.notes is string && data.notes.size() <= 2000));
+    }
+
+    function isValidStakeholderProfile(data) {
+      return data.userId is string &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 150 &&
+             data.role is string && data.role.size() > 0 && data.role.size() <= 150 &&
+             data.department is string && data.department.size() <= 150 &&
+             data.gridDomain in ['GENERATION', 'TRANSMISSION', 'DISTRIBUTION', 'SUBSTATION', 'CUSTOMER_DER', 'CROSS_CUTTING'] &&
+             data.influenceLevel in ['EXECUTIVE_SPONSOR', 'DECISION_MAKER', 'TECHNICAL_APPROVER', 'KEY_INFLUENCER', 'OPERATIONAL_STAKEHOLDER'] &&
+             data.influenceScore is int && data.influenceScore >= 1 && data.influenceScore <= 100 &&
+             data.stance in ['POSITIVE', 'NEUTRAL', 'CAUTIOUS', 'CONCERNED'] &&
+             (!('email' in data) || (data.email is string && data.email.size() <= 200)) &&
+             (!('phone' in data) || (data.phone is string && data.phone.size() <= 50)) &&
+             (!('officeLocation' in data) || (data.officeLocation is string && data.officeLocation.size() <= 200)) &&
+             (!('preferredChannel' in data) || (data.preferredChannel is string && data.preferredChannel.size() <= 100)) &&
+             (!('projectResponsibilities' in data) || (data.projectResponsibilities is string && data.projectResponsibilities.size() <= 3000)) &&
+             (!('notes' in data) || (data.notes is string && data.notes.size() <= 5000));
+    }
+
+    function isValidStakeholderInteraction(data) {
+      return data.userId is string &&
+             data.investigationId is string && data.investigationId.size() > 0 && data.investigationId.size() <= 128 &&
+             data.stakeholderName is string && data.stakeholderName.size() > 0 && data.stakeholderName.size() <= 150 &&
+             data.stakeholderRole is string && data.stakeholderRole.size() > 0 && data.stakeholderRole.size() <= 150 &&
+             (!('department' in data) || (data.department is string && data.department.size() <= 150)) &&
+             data.gridDomain in ['GENERATION', 'TRANSMISSION', 'DISTRIBUTION', 'SUBSTATION', 'CUSTOMER_DER', 'CROSS_CUTTING'] &&
+             data.communicationChannel is string && data.communicationChannel.size() > 0 && data.communicationChannel.size() <= 100 &&
+             data.interactionDateLabel is string && data.interactionDateLabel.size() > 0 && data.interactionDateLabel.size() <= 50 &&
+             data.communicationSummary is string && data.communicationSummary.size() > 0 && data.communicationSummary.size() <= 5000 &&
+             data.identifiedRebuttals is string && data.identifiedRebuttals.size() > 0 && data.identifiedRebuttals.size() <= 5000 &&
+             data.rebuttalCategory in ['WORKFORCE_AUGMENTATION', 'SAFETY_INJURY_GUARDRAILS', 'PROCESS_SIMPLICITY', 'PROVEN_WORKFLOW_FIT', 'OPERATIONAL_TRUST'] &&
+             data.buyInStrategy is string && data.buyInStrategy.size() > 0 && data.buyInStrategy.size() <= 5000 &&
+             data.buyInStatus in ['INITIAL_OUTREACH', 'REBUTTAL_IDENTIFIED', 'STRATEGY_IN_PROGRESS', 'PILOT_VALIDATION', 'BUY_IN_ACHIEVED'] &&
+             (!('laborEfficiencyGainPct' in data) || (data.laborEfficiencyGainPct is number && data.laborEfficiencyGainPct >= 0 && data.laborEfficiencyGainPct <= 100)) &&
+             (!('safetyImprovementPct' in data) || (data.safetyImprovementPct is number && data.safetyImprovementPct >= 0 && data.safetyImprovementPct <= 100)) &&
+             (!('workflowOptimizationPct' in data) || (data.workflowOptimizationPct is number && data.workflowOptimizationPct >= 0 && data.workflowOptimizationPct <= 100));
+    }
+
+    match /users/{userId} {
+      allow get: if isSignedIn() && request.auth.uid == userId;
+
+      match /stakeholder_profiles/{profileId} {
+        allow get, list: if isSignedIn() && request.auth.uid == userId;
+
+        allow create: if isSignedIn() &&
+                         request.auth.uid == userId &&
+                         isValidId(profileId) &&
+                         incoming().userId == request.auth.uid &&
+                         incoming().createdAt is timestamp &&
+                         incoming().createdAt <= request.time &&
+                         incoming().updatedAt is timestamp &&
+                         incoming().updatedAt <= request.time &&
+                         isValidStakeholderProfile(incoming());
+
+        allow update: if isSignedIn() &&
+                         request.auth.uid == userId &&
+                         isValidId(profileId) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         incoming().updatedAt is timestamp &&
+                         incoming().updatedAt <= request.time &&
+                         isValidStakeholderProfile(incoming());
+
+        allow delete: if isSignedIn() &&
+                         request.auth.uid == userId &&
+                         isValidId(profileId);
+      }
+
+      match /stakeholder_interactions/{interactionId} {
+        allow get, list: if isSignedIn() && request.auth.uid == userId;
+
+        allow create: if isSignedIn() &&
+                         request.auth.uid == userId &&
+                         isValidId(interactionId) &&
+                         incoming().userId == request.auth.uid &&
+                         incoming().createdAt is timestamp &&
+                         incoming().createdAt <= request.time &&
+                         incoming().updatedAt is timestamp &&
+                         incoming().updatedAt <= request.time &&
+                         isValidStakeholderInteraction(incoming());
+
+        allow update: if isSignedIn() &&
+                         request.auth.uid == userId &&
+                         isValidId(interactionId) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         incoming().updatedAt is timestamp &&
+                         incoming().updatedAt <= request.time &&
+                         isValidStakeholderInteraction(incoming());
+
+        allow delete: if isSignedIn() &&
+                         request.auth.uid == userId &&
+                         isValidId(interactionId);
+      }
+
+      match /investigations/{investigationId} {
+        allow get, list: if isSignedIn() && request.auth.uid == userId;
+
+        allow create: if isSignedIn() &&
+                         request.auth.uid == userId &&
+                         isValidId(investigationId) &&
+                         incoming().userId == request.auth.uid &&
+                         incoming().createdAt is timestamp &&
+                         incoming().createdAt <= request.time &&
+                         incoming().updatedAt is timestamp &&
+                         incoming().updatedAt <= request.time &&
+                         isValidInvestigation(incoming());
+
+        allow update: if isSignedIn() &&
+                         request.auth.uid == userId &&
+                         isValidId(investigationId) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         incoming().updatedAt is timestamp &&
+                         incoming().updatedAt <= request.time &&
+                         isValidInvestigation(incoming());
+
+        allow delete: if isSignedIn() &&
+                         request.auth.uid == userId &&
+                         isValidId(investigationId);
+
+        match /interviews/{interviewId} {
+          allow get, list: if isSignedIn() && request.auth.uid == userId;
+
+          allow create: if isSignedIn() &&
+                           request.auth.uid == userId &&
+                           isValidId(interviewId) &&
+                           incoming().userId == request.auth.uid &&
+                           incoming().investigationId == investigationId &&
+                           incoming().createdAt is timestamp &&
+                           incoming().createdAt <= request.time &&
+                           incoming().updatedAt is timestamp &&
+                           incoming().updatedAt <= request.time &&
+                           isValidInterview(incoming());
+
+          allow update: if isSignedIn() &&
+                           request.auth.uid == userId &&
+                           isValidId(interviewId) &&
+                           incoming().userId == existing().userId &&
+                           incoming().investigationId == existing().investigationId &&
+                           incoming().createdAt == existing().createdAt &&
+                           incoming().updatedAt is timestamp &&
+                           incoming().updatedAt <= request.time &&
+                           isValidInterview(incoming());
+
+          allow delete: if isSignedIn() &&
+                           request.auth.uid == userId &&
+                           isValidId(interviewId);
+        }
+
+        match /use_cases/{useCaseId} {
+          allow get, list: if isSignedIn() && request.auth.uid == userId;
+
+          allow create: if isSignedIn() &&
+                           request.auth.uid == userId &&
+                           isValidId(useCaseId) &&
+                           incoming().userId == request.auth.uid &&
+                           incoming().investigationId == investigationId &&
+                           incoming().createdAt is timestamp &&
+                           incoming().createdAt <= request.time &&
+                           incoming().updatedAt is timestamp &&
+                           incoming().updatedAt <= request.time &&
+                           isValidUseCase(incoming());
+
+          allow update: if isSignedIn() &&
+                           request.auth.uid == userId &&
+                           isValidId(useCaseId) &&
+                           incoming().userId == existing().userId &&
+                           incoming().investigationId == existing().investigationId &&
+                           incoming().createdAt == existing().createdAt &&
+                           incoming().updatedAt is timestamp &&
+                           incoming().updatedAt <= request.time &&
+                           isValidUseCase(incoming());
+
+          allow delete: if isSignedIn() &&
+                           request.auth.uid == userId &&
+                           isValidId(useCaseId);
+        }
+
+        match /pilot_kpis/{kpiId} {
+          allow get, list: if isSignedIn() && request.auth.uid == userId;
+
+          allow create: if isSignedIn() &&
+                           request.auth.uid == userId &&
+                           isValidId(kpiId) &&
+                           incoming().userId == request.auth.uid &&
+                           incoming().investigationId == investigationId &&
+                           incoming().createdAt is timestamp &&
+                           incoming().createdAt <= request.time &&
+                           incoming().updatedAt is timestamp &&
+                           incoming().updatedAt <= request.time &&
+                           isValidPilotKpi(incoming());
+
+          allow update: if isSignedIn() &&
+                           request.auth.uid == userId &&
+                           isValidId(kpiId) &&
+                           incoming().userId == existing().userId &&
+                           incoming().investigationId == existing().investigationId &&
+                           incoming().createdAt == existing().createdAt &&
+                           incoming().updatedAt is timestamp &&
+                           incoming().updatedAt <= request.time &&
+                           isValidPilotKpi(incoming());
+
+          allow delete: if isSignedIn() &&
+                           request.auth.uid == userId &&
+                           isValidId(kpiId);
+        }
+      }
+    }
+  }
+}

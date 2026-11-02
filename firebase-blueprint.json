@@ -1,0 +1,233 @@
+{
+  "entities": {
+    "Investigation": {
+      "title": "Investigation",
+      "description": "Grid technology or product investigation with business case and roadmap lifecycle.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The UID of the user who owns this investigation." },
+        "title": { "type": "string", "description": "Name of the technology or product initiative." },
+        "technologyType": { "type": "string", "description": "Grid domain category." },
+        "vendor": { "type": "string", "description": "Vendor or developer." },
+        "status": {
+          "type": "string",
+          "enum": ["INVESTIGATION", "BUSINESS_CASE", "PILOT", "CHANGE_MANAGEMENT", "ECOSYSTEM_ADOPTION"]
+        },
+        "description": { "type": "string", "description": "Detailed overview and objectives." },
+        "capexEstimate": { "type": "number", "description": "Capital expenditure estimate in USD." },
+        "opexEstimate": { "type": "number", "description": "Operational expenditure estimate in USD/year." },
+        "projectedRoi": { "type": "number", "description": "Estimated ROI percentage." },
+        "paybackYears": { "type": "number", "description": "Estimated payback period in years." },
+        "saidiImprovement": { "type": "number", "description": "Projected SAIDI outage reduction in minutes." },
+        "pilotFeasibilityScore": { "type": "number", "description": "Calculated feasibility score (0-100)." },
+        "maximoIntegrationStatus": { "type": "string", "description": "IBM Maximo asset management readiness." },
+        "azureIntegrationStatus": { "type": "string", "description": "Azure cloud IoT/compute readiness." },
+        "oracleIntegrationStatus": { "type": "string", "description": "Oracle NMS/ERP/CC&B readiness." },
+        "snowflakeIntegrationStatus": { "type": "string", "description": "Snowflake telemetry data warehouse readiness." },
+        "copilotReportingStatus": { "type": "string", "description": "Microsoft Copilot automated reporting readiness." },
+        "pilotFeederSubstation": { "type": "string", "description": "Target pilot grid feeder or substation." },
+        "pilotDurationWeeks": { "type": "integer", "description": "Target pilot duration in weeks." },
+        "pilotSuccessRate": { "type": "number", "description": "Pilot evaluation KPI success rate (0-100)." },
+        "changeManagementScore": { "type": "number", "description": "ADKAR organizational adoption score (0-100)." },
+        "strategicSummary": { "type": "string", "description": "AI-generated executive briefing and business case summary." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp of last update." }
+      },
+      "required": ["userId", "title", "technologyType", "vendor", "status", "createdAt", "updatedAt"]
+    },
+    "Interview": {
+      "title": "Interview",
+      "description": "Stakeholder interview aggregating requirements and feasibility feedback.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The UID of the user who owns this investigation." },
+        "investigationId": { "type": "string", "description": "Parent investigation ID." },
+        "stakeholderName": { "type": "string", "description": "Name or title of interviewee." },
+        "stakeholderRole": { "type": "string", "description": "Role (Engineering, Operations, IT/Cyber, Finance, Regulatory)." },
+        "department": { "type": "string", "description": "Utility department." },
+        "notes": { "type": "string", "description": "Interview raw notes and observations." },
+        "priorityRating": { "type": "integer", "description": "Priority score from 1 (lowest) to 5 (highest)." },
+        "feasibilityAssessment": { "type": "string", "description": "Feasibility and risk sentiment." },
+        "gridDomain": {
+          "type": "string",
+          "enum": ["GENERATION", "TRANSMISSION", "DISTRIBUTION", "SUBSTATION", "CUSTOMER_DER", "CROSS_CUTTING"],
+          "description": "Grid domain categorization."
+        },
+        "sentiment": {
+          "type": "string",
+          "enum": ["POSITIVE", "NEUTRAL", "CAUTIOUS", "CONCERNED"],
+          "description": "Stakeholder sentiment."
+        },
+        "keyRequirements": { "type": "string", "description": "Extracted key requirements." },
+        "integrationConcerns": { "type": "string", "description": "Identified integration concerns with existing systems." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp of last update." }
+      },
+      "required": ["userId", "investigationId", "stakeholderName", "stakeholderRole", "createdAt", "updatedAt"]
+    },
+    "UseCase": {
+      "title": "UseCase",
+      "description": "Specific operational or economic utility grid use case.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The UID of the user." },
+        "investigationId": { "type": "string", "description": "Parent investigation ID." },
+        "title": { "type": "string", "description": "Use case title (e.g., Wildfire Prevention, DER Hosting)." },
+        "description": { "type": "string", "description": "Detailed operational narrative." },
+        "targetSystems": { "type": "string", "description": "Systems involved (e.g. Maximo, Azure, Snowflake)." },
+        "projectedAnnualSavings": { "type": "number", "description": "Estimated annual savings in USD." },
+        "feasibilityScore": { "type": "number", "description": "Feasibility score (0-100)." },
+        "projectedRoi": { "type": "number", "description": "Estimated return on investment percentage." },
+        "gridDomain": {
+          "type": "string",
+          "enum": ["GENERATION", "TRANSMISSION", "DISTRIBUTION", "SUBSTATION", "CUSTOMER_DER", "CROSS_CUTTING"],
+          "description": "Grid domain categorization."
+        },
+        "riskLevel": { "type": "string", "description": "Risk level (LOW, MEDIUM, HIGH)." },
+        "stakeholderBacking": { "type": "string", "description": "Stakeholder interviews and departments endorsing this use case." },
+        "implementationWeeks": { "type": "integer", "description": "Estimated weeks for pilot and initial deployment." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp of last update." }
+      },
+      "required": ["userId", "investigationId", "title", "createdAt", "updatedAt"]
+    },
+    "PilotKpi": {
+      "title": "PilotKpi",
+      "description": "Key performance indicator (KPI) metric logged from an active technology field pilot.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The UID of the user." },
+        "investigationId": { "type": "string", "description": "Parent investigation ID." },
+        "metricName": { "type": "string", "description": "Name of the KPI (e.g., Efficiency Gain, Inverter Uptime)." },
+        "category": {
+          "type": "string",
+          "enum": ["EFFICIENCY", "UPTIME", "RELIABILITY", "POWER_QUALITY", "COST_REDUCTION", "SAFETY_COMPLIANCE"],
+          "description": "Category of metric."
+        },
+        "currentValue": { "type": "number", "description": "Current measured value." },
+        "targetValue": { "type": "number", "description": "Target benchmark value." },
+        "unit": { "type": "string", "description": "Measurement unit (e.g., %, min, kW, V, $/mo)." },
+        "notes": { "type": "string", "description": "Observation notes, testing conditions, or anomalous events." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp of last update." }
+      },
+      "required": ["userId", "investigationId", "metricName", "category", "currentValue", "targetValue", "unit", "createdAt", "updatedAt"]
+    },
+    "StakeholderProfile": {
+      "title": "StakeholderProfile",
+      "description": "Detailed utility stakeholder profile with contact information, organizational role, grid domain, and influence level on grid projects.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The UID of the user who owns this stakeholder profile." },
+        "name": { "type": "string", "description": "Full name of the stakeholder." },
+        "role": { "type": "string", "description": "Organizational job title or role." },
+        "department": { "type": "string", "description": "Utility department or business unit." },
+        "email": { "type": "string", "description": "Work email address." },
+        "phone": { "type": "string", "description": "Work or dispatch phone number." },
+        "officeLocation": { "type": "string", "description": "Substation, regional control center, or corporate office location." },
+        "preferredChannel": { "type": "string", "description": "Preferred communication channel (e.g., Email, Teams, Phone, In-Person)." },
+        "gridDomain": {
+          "type": "string",
+          "enum": ["GENERATION", "TRANSMISSION", "DISTRIBUTION", "SUBSTATION", "CUSTOMER_DER", "CROSS_CUTTING"],
+          "description": "Primary grid domain of authority."
+        },
+        "influenceLevel": {
+          "type": "string",
+          "enum": ["EXECUTIVE_SPONSOR", "DECISION_MAKER", "TECHNICAL_APPROVER", "KEY_INFLUENCER", "OPERATIONAL_STAKEHOLDER"],
+          "description": "Governance influence tier on grid modernization projects."
+        },
+        "influenceScore": { "type": "integer", "description": "Quantitative project influence score from 1 to 100." },
+        "stance": {
+          "type": "string",
+          "enum": ["POSITIVE", "NEUTRAL", "CAUTIOUS", "CONCERNED"],
+          "description": "Current alignment stance on grid technology initiatives."
+        },
+        "projectResponsibilities": { "type": "string", "description": "Key sign-off gates, governance boards, and project responsibilities." },
+        "notes": { "type": "string", "description": "Engagement strategy notes and background context." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp of last update." }
+      },
+      "required": ["userId", "name", "role", "department", "gridDomain", "influenceLevel", "influenceScore", "stance", "createdAt", "updatedAt"]
+    },
+    "StakeholderInteraction": {
+      "title": "StakeholderInteraction",
+      "description": "Stakeholder interaction log tracking communication history, identified rebuttals, and buy-in strategies for technology integration.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The UID of the user who owns this interaction record." },
+        "investigationId": { "type": "string", "description": "Associated investigation ID or GLOBAL." },
+        "stakeholderName": { "type": "string", "description": "Full name of the stakeholder." },
+        "stakeholderRole": { "type": "string", "description": "Organizational role of the stakeholder." },
+        "department": { "type": "string", "description": "Utility department or crew division." },
+        "gridDomain": {
+          "type": "string",
+          "enum": ["GENERATION", "TRANSMISSION", "DISTRIBUTION", "SUBSTATION", "CUSTOMER_DER", "CROSS_CUTTING"],
+          "description": "Grid domain categorization."
+        },
+        "communicationChannel": { "type": "string", "description": "Communication medium (e.g., Field Walkdown, Control Room Sync, Union Briefing)." },
+        "interactionDateLabel": { "type": "string", "description": "Human-readable interaction date string." },
+        "communicationSummary": { "type": "string", "description": "Summary of communication history and points discussed." },
+        "identifiedRebuttals": { "type": "string", "description": "Specific stakeholder rebuttals, objections, or friction points." },
+        "rebuttalCategory": {
+          "type": "string",
+          "enum": ["WORKFORCE_AUGMENTATION", "SAFETY_INJURY_GUARDRAILS", "PROCESS_SIMPLICITY", "PROVEN_WORKFLOW_FIT", "OPERATIONAL_TRUST"],
+          "description": "Primary theme of the identified rebuttal."
+        },
+        "buyInStrategy": { "type": "string", "description": "Actionable strategy to achieve buy-in via workforce augmentation, safety guardrails, and workflow simplicity." },
+        "buyInStatus": {
+          "type": "string",
+          "enum": ["INITIAL_OUTREACH", "REBUTTAL_IDENTIFIED", "STRATEGY_IN_PROGRESS", "PILOT_VALIDATION", "BUY_IN_ACHIEVED"],
+          "description": "Current buy-in progression status."
+        },
+        "laborEfficiencyGainPct": { "type": "number", "description": "Projected labor efficiency gain percentage." },
+        "safetyImprovementPct": { "type": "number", "description": "Projected safety and preventable injury reduction percentage." },
+        "workflowOptimizationPct": { "type": "number", "description": "Projected workflow optimization and process simplicity percentage." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp of creation (FieldValue.serverTimestamp())." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp of last update (FieldValue.serverTimestamp())." }
+      },
+      "required": [
+        "userId",
+        "investigationId",
+        "stakeholderName",
+        "stakeholderRole",
+        "gridDomain",
+        "communicationChannel",
+        "interactionDateLabel",
+        "communicationSummary",
+        "identifiedRebuttals",
+        "rebuttalCategory",
+        "buyInStrategy",
+        "buyInStatus",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/investigations/{investigationId}": {
+      "schema": { "$ref": "#/entities/Investigation" },
+      "description": "Grid technology investigations scoped to authenticated user."
+    },
+    "/users/{userId}/investigations/{investigationId}/interviews/{interviewId}": {
+      "schema": { "$ref": "#/entities/Interview" },
+      "description": "Stakeholder interviews nested under an investigation."
+    },
+    "/users/{userId}/investigations/{investigationId}/use_cases/{useCaseId}": {
+      "schema": { "$ref": "#/entities/UseCase" },
+      "description": "Business and operational use cases nested under an investigation."
+    },
+    "/users/{userId}/investigations/{investigationId}/pilot_kpis/{kpiId}": {
+      "schema": { "$ref": "#/entities/PilotKpi" },
+      "description": "Pilot telemetry KPIs nested under an active investigation."
+    },
+    "/users/{userId}/stakeholder_profiles/{profileId}": {
+      "schema": { "$ref": "#/entities/StakeholderProfile" },
+      "description": "Detailed stakeholder profiles scoped to authenticated user."
+    },
+    "/users/{userId}/stakeholder_interactions/{interactionId}": {
+      "schema": { "$ref": "#/entities/StakeholderInteraction" },
+      "description": "Stakeholder interaction logs tracking communication history, rebuttals, and buy-in strategies scoped to authenticated user."
+    }
+  }
+}
+

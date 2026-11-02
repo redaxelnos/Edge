@@ -1,0 +1,6 @@
+{
+  "name": "GridPilot",
+  "description": "Multi-stakeholder technology investigation, business case modeling, and pilot roadmap evaluator for electric utility grid modernization.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

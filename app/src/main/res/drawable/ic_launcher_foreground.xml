@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:pivotX="54"
+        android:pivotY="54">
+        <!-- Grid Transmission Tower Base & Struts -->
+        <path
+            android:fillColor="#38BDF8"
+            android:pathData="M54,26 L46,42 L34,45 L34,49 L44,51 L38,72 L28,75 L28,79 L36,81 L28,94 L33,94 L39,82 L50,84 L50,94 L58,94 L58,84 L69,82 L75,94 L80,94 L72,81 L80,79 L80,75 L70,72 L64,51 L74,49 L74,45 L62,42 Z M54,34 L59,42 L49,42 Z M47,51 L61,51 L63,60 L45,60 Z M44,64 L64,64 L66,74 L42,74 Z" />
+        <!-- Cross arms & Power Lines -->
+        <path
+            android:fillColor="#FACC15"
+            android:pathData="M54,18 L51,24 L57,24 Z" />
+        <path
+            android:strokeColor="#FACC15"
+            android:strokeWidth="2.5"
+            android:strokeLineCap="round"
+            android:pathData="M24,47 Q54,58 84,47 M18,77 Q54,88 90,77" />
+        <!-- Digital Grid Smart Beacon Dots -->
+        <path
+            android:fillColor="#F8FAFC"
+            android:pathData="M54,18 A3,3 0 1,1 53.99,18 Z M24,47 A3.5,3.5 0 1,1 23.99,47 Z M84,47 A3.5,3.5 0 1,1 83.99,47 Z M18,77 A3.5,3.5 0 1,1 17.99,77 Z M90,77 A3.5,3.5 0 1,1 89.99,77 Z" />
+    </group>
+</vector>
